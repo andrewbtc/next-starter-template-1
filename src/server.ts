@@ -27,7 +27,7 @@ interface ErrorResponse {
     message?: string;
 }
 
-app.post('/generate-images', async (req: Request<object, GenerateImagesResponse | ErrorResponse, GenerateImagesRequest>, res: Response<GenerateImagesResponse | ErrorResponse>) => {
+app.post('/generate-images', async (req: Request<{}, GenerateImagesResponse | ErrorResponse, GenerateImagesRequest>, res: Response<GenerateImagesResponse | ErrorResponse>) => {
     try {
         const { word1, word2, word3 } = req.body;
         
@@ -51,14 +51,10 @@ app.post('/generate-images', async (req: Request<object, GenerateImagesResponse 
             imageUrls: imageUrls
         });
         
-    } catch (error: unknown) {
+    } catch (error: any) {
         console.error('Error generating images:', error);
-        let message = 'Unknown error';
-        if (error instanceof Error) {
-            message = error.message;
-        }
         res.status(500).json({
-            error: '500 Error - Failed to generate images'
+            error: '500 Error - Failed to generate images',
         });
     }
 });

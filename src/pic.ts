@@ -1,8 +1,7 @@
 import { SogniClient } from '@sogni-ai/sogni-client';
-import { env } from 'process';
 
 const USERNAME = process.env.SOGNI_USERNAME || 'operator';
-const PASSWORD = env.PASSWORD || '';
+const PASSWORD = process.env.SOGNI_PASSWORD || 'XB3Y92*uqf7DGUX9j2A8';
 
 function generateStory(word1: string, word2: string, word3: string): string {
     const storyTemplates: string[] = [
@@ -46,7 +45,7 @@ export async function generateImages(word1: string, word2: string, word3: string
         const imageUrls: string[] = await project.waitForCompletion();
         return imageUrls;
         
-    } catch (error) {
-        throw new Error(`Image generation failed: ${error}`);
+    } catch (error: any) {
+        throw new Error(`Image generation failed: ${error.message}`);
     }
 }
