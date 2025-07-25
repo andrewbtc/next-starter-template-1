@@ -2,7 +2,7 @@ import { SogniClient } from '@sogni-ai/sogni-client';
 import { env } from 'process';
 
 const USERNAME = process.env.SOGNI_USERNAME || 'operator';
-const PASSWORD = env.PASSWORD;
+const PASSWORD = env.PASSWORD || '';
 
 function generateStory(word1: string, word2: string, word3: string): string {
     const storyTemplates: string[] = [
