@@ -45,7 +45,11 @@ export async function generateImages(word1: string, word2: string, word3: string
         const imageUrls: string[] = await project.waitForCompletion();
         return imageUrls;
         
-    } catch (error: any) {
-        throw new Error(`Image generation failed: ${error.message}`);
+    } catch (error: unknown) {
+        let message = 'Unknown error';
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        throw new Error(`Image generation failed: ${message}`);
     }
 }

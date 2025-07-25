@@ -27,37 +27,51 @@ interface ErrorResponse {
     message?: string;
 }
 
-app.post('/generate-images', async (req: Request<{}, GenerateImagesResponse | ErrorResponse, GenerateImagesRequest>, res: Response<GenerateImagesResponse | ErrorResponse>) => {
-    try {
-        const { word1, word2, word3 } = req.body;
-        
-        if (!word1 || !word2 || !word3) {
-            return res.status(400).json({
-                error: 'Missing required parameters. Please provide word1, word2, and word3.'
+app.post(
+    '/generate-images',
+    async (
+        req: Request<object, GenerateImagesResponse | ErrorResponse, GenerateImagesRequest>,
+        res: Response<GenerateImagesResponse | ErrorResponse>
+    ) => {
+        try {
+            const { word1, word2, word3 } = req.body;
+
+            if (!word1 || !word2 || !word3) {
+                return res.status(400).json({
+                    error: 'Missing required parameters. Please provide word1, word2, and word3.'
+                });
+            }
+
+            if (
+                word1.split(' ').length > 1 ||
+                word2.split(' ').length > 1 ||
+                word3.split(' ').length > 1
+            ) {
+                return res.status(400).json({
+                    error: 'Each parameter must be a single word only.'
+                });
+            }
+
+            const imageUrls = await generateImages(word1, word2, word3);
+
+            res.json({
+                success: true,
+                words: { word1, word2, word3 },
+                imageUrls: imageUrls
+            });
+        } catch (error: unknown) {
+            console.error('Error generating images:', error);
+            let message = 'Unknown error';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            res.status(500).json({
+                error: '500 Error - Failed to generate images',
+                message
             });
         }
-        
-        if (word1.split(' ').length > 1 || word2.split(' ').length > 1 || word3.split(' ').length > 1) {
-            return res.status(400).json({
-                error: 'Each parameter must be a single word only.'
-            });
-        }
-        
-        const imageUrls = await generateImages(word1, word2, word3);
-        
-        res.json({
-            success: true,
-            words: { word1, word2, word3 },
-            imageUrls: imageUrls
-        });
-        
-    } catch (error: any) {
-        console.error('Error generating images:', error);
-        res.status(500).json({
-            error: '500 Error - Failed to generate images',
-        });
     }
-});
+);
 
 app.get('/health', (req: Request, res: Response) => {
     res.json({ status: 'OK', message: 'Image generation API is running' });
