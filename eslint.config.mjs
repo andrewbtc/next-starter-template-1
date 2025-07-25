@@ -14,11 +14,12 @@ const eslintConfig = [
   ...compat.config({
     extends: ['next'],
     rules: {
-      "@typescript-eslint/no-explicit-any": "error"
+      "@typescript-eslint/no-explicit-any": "error",
+       'react/no-unescaped-entities': 'off',
+      '@next/next/no-page-custom-font': 'off',
     },
   }),
 ];
-
 
 export default eslintConfig;
 
