@@ -58,8 +58,7 @@ app.post('/generate-images', async (req: Request<object, GenerateImagesResponse 
             message = error.message;
         }
         res.status(500).json({
-            error: 'Failed to generate images',
-            message: error.message
+            error: '500 Error - Failed to generate images'
         });
     }
 });
